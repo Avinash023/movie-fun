@@ -1,6 +1,7 @@
 package org.superbiz.moviefun;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.superbiz.moviefun.albums.Album;
 import org.superbiz.moviefun.albums.AlbumFixtures;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @Controller
 public class HomeController {
+
 
     private final MoviesBean moviesBean;
     private final AlbumsBean albumsBean;
@@ -31,19 +33,28 @@ public class HomeController {
         return "index";
     }
 
+
     @GetMapping("/setup")
     public String setup(Map<String, Object> model) {
-        for (Movie movie : movieFixtures.load()) {
-            moviesBean.addMovie(movie);
-        }
 
+        addMovies();
+        addAlbums();
+        model.put("movies", moviesBean.getMovies());
+        model.put("albums", albumsBean.getAlbums());
+        return "setup";
+    }
+
+    @Transactional("platformTransactionManagerAlbums")
+    private void addAlbums() {
         for (Album album : albumFixtures.load()) {
             albumsBean.addAlbum(album);
         }
+    }
 
-        model.put("movies", moviesBean.getMovies());
-        model.put("albums", albumsBean.getAlbums());
-
-        return "setup";
+    @Transactional("platformTransactionManagerMovies")
+    private void addMovies() {
+        for (Movie movie : movieFixtures.load()) {
+            moviesBean.addMovie(movie);
+        }
     }
 }
