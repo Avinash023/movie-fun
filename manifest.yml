@@ -1,0 +1,14 @@
+applications:
+- name: moviefun
+  path: target/moviefun.war
+  buildpacks:
+  - java_buildpack_offline
+  disk_quota: 1G
+  instances: 2
+  memory: 1G
+  routes:
+  - route: moviefun-patient-gecko.apps.pikes.pal.pivotal.io
+  services:
+  - movies-mysql
+  - photo-storage
+  stack: cflinuxfs2
