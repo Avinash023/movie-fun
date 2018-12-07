@@ -6,24 +6,37 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CsvUtils {
 
-    public static String readFile(String path) {
+    public static String readFile(String path) throws IOException {
+
+        InputStream inputStream = null;
         try {
-            Scanner scanner = new Scanner(new File(path)).useDelimiter("\\A");
+            //System.out.print("--- PATH :"+path);
+            inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            //Scanner scanner = new Scanner(new File(path)).useDelimiter("\\A");
+            Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
 
             if (scanner.hasNext()) {
-                return scanner.next();
+                String scnrString = scanner.next();
+                //System.out.print("---------------LINE  :"+scnrString);
+                return scnrString;
             } else {
                 return "";
             }
 
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+
+            if(inputStream!= null) {
+                inputStream.close();
+            }
         }
     }
 
