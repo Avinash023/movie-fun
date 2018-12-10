@@ -41,7 +41,7 @@ public class Application {
         AWSCredentials credentials = new BasicAWSCredentials(photoStorageAccessKeyId, photoStorageSecretKey);
         AmazonS3Client s3Client = new AmazonS3Client(credentials);
 
-        if (endpoint != null) {
+        if (endpoint != null && endpoint.equals( "" ) == false) {
             s3Client.setEndpoint(endpoint);
         }
 
