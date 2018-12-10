@@ -50,7 +50,7 @@ public class AlbumsController {
 
     @PostMapping("/{albumId}/cover")
     public String uploadCover(@PathVariable long albumId, @RequestParam("file") MultipartFile uploadedFile) throws IOException {
-        
+
         blobStore.put( new Blob( albumId+"", uploadedFile.getInputStream(), uploadedFile.getContentType() ) );
         return format("redirect:/albums/%d", albumId);
     }
